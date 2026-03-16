@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gossip Harbor Official Reward</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. SETUP TEMA ENERGY BAR (MAROON & GOLD) --- */
+        :root {
+            --maroon-dark: #660000;
+            --maroon-light: #990000;
+            --gold-main: #FFD700;
+            --gold-dark: #FF9800;
+            --text-light: #FFFFFF;
+        }
+
+        body {
+            margin: 0; padding: 0; font-family: 'Nunito', sans-serif;
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; user-select: none;
+            background-color: #1a0000; /* Warna dasar merah super gelap */
+            position: relative;
+            z-index: 0;
+        }
+
+        /* Latar belakang gradasi merah elegan (Statis, tanpa animasi) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, #5e0000 0%, #1a0000 100%);
+            z-index: -2;
+        }
+
+        /* Efek pendaran cahaya emas dari atas (Animasi Transparansi) */
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at top, rgba(255, 215, 0, 0.15) 0%, transparent 60%);
+            z-index: -1;
+            animation: pendarCahaya 3s ease-in-out infinite alternate;
+        }
+
+        /* Animasi sangat ringan, langsung diproses oleh GPU HP */
+        @keyframes pendarCahaya {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+        /* --- 2. GLOBAL TOP BAR --- */
+        .global-topbar {
+            position: fixed; 
+            top: 0; left: 0; width: 100%;
+            background: rgba(40, 0, 0, 0.7);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; box-sizing: border-box; z-index: 999; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+        .topbar-left img { 
+            width: 32px; height: 32px; border-radius: 8px; 
+        }
+        .topbar-left span { color: var(--gold-main); font-weight: 900; font-size: 16px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+        .topbar-right { color: var(--gold-main); font-size: 24px; cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); transition: 0.2s;}
+        .topbar-right:active { transform: scale(0.9); }
+
+        /* --- 3. CONTAINER (KACA MAROON TRANSPARAN) --- */
+        .glass-panel {
+            background: linear-gradient(to bottom, rgba(153, 0, 0, 0.6), rgba(77, 0, 0, 0.8));
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 2px solid var(--gold-main); width: 90%; max-width: 360px;
+            border-radius: 25px; padding: 30px 25px; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(255, 215, 0, 0.2);
+            margin-top: 50px; animation: fadeIn 0.5s ease-out; z-index: 10;
+        }
+
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* --- 4. TATA LETAK ISI KOTAK --- */
+        .center-logo {
+            width: 90px; height: 90px; border-radius: 20px; margin: 0 auto 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5); border: 3px solid var(--gold-main);
+            object-fit: cover;
+        }
+
+        .main-title { color: var(--gold-main); font-weight: 900; font-size: 24px; margin: 0 0 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        .main-desc { color: #FFE0B2; font-size: 14px; margin-bottom: 25px; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);}
+
+        /* FORM INPUT */
+        .input-box {
+            width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 215, 0, 0.4); border-radius: 15px; font-size: 16px; font-weight: 800;
+            color: var(--gold-main); box-sizing: border-box; outline: none; transition: all 0.3s; text-align: center;
+            margin-bottom: 20px; box-shadow: inset 0 3px 5px rgba(0,0,0,0.3);
+        }
+        .input-box::placeholder { color: rgba(255, 255, 255, 0.5); font-weight: 600; }
+        .input-box:focus { border-color: var(--gold-main); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+
+/* TOMBOL LANJUTKAN (DENGAN ANIMASI DENYUT EMAS) */
+        .btn-main {
+            background: linear-gradient(180deg, #FFD700, #FF9800); color: #4A0000;
+            border: 2px solid #FFF59D; padding: 16px; width: 100%;
+            border-radius: 15px; font-size: 16px; font-weight: 900;
+            cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.5); text-decoration: none; 
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            box-sizing: border-box;
+            
+            /* --- INI KODE ANIMASI DENYUTNYA --- */
+            animation: denyutTombol 2s infinite;
+        }
+        .btn-main:active { transform: translateY(3px) !important; box-shadow: 0 2px 5px rgba(255, 152, 0, 0.5) !important; }
+
+        /* KEYFRAMES UNTUK CAHAYA YANG BERDENYUT */
+        @keyframes denyutTombol {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.8); 
+                transform: scale(1); 
+            }
+            50% { 
+                box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); 
+                transform: scale(1.02); /* Tombol membesar sedikit seolah bernapas */
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); 
+                transform: scale(1); 
+            }
+        }
+        /* --- 5. GRID KARTU --- */
+        .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .card {
+            background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px; padding: 15px 5px; cursor: pointer; transition: 0.2s; 
+            display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .card:hover { transform: translateY(-2px); border-color: rgba(255, 215, 0, 0.6); }
+        .card-icon { font-size: 28px; margin-bottom: 8px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8));}
+        .card-title { margin: 0; font-size: 14px; color: var(--text-light); font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);}
+        .card-sub { font-size: 11px; color: var(--gold-main); font-weight: 800; margin-top: 3px; }
+        .card.selected { border-color: var(--gold-main); background: rgba(255, 215, 0, 0.15); box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), inset 0 0 10px rgba(255, 215, 0, 0.2); }
+
+/* --- 6. LOADING SPINNER & CHECKMARK --- */
+        .hidden { display: none !important; }
+        
+        /* Modern Spinner Upgrade */
+        .modern-spinner {
+            position: relative; width: 60px; height: 60px; margin: 0 auto 15px;
+        }
+        .modern-spinner .ring {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; border: 4px solid transparent; box-sizing: border-box;
+        }
+        .modern-spinner .ring:nth-child(1) {
+            border-top-color: var(--gold-main);
+            animation: spin1 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .modern-spinner .ring:nth-child(2) {
+            border-right-color: #FF9800;
+            animation: spin2 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .modern-spinner .ring:nth-child(3) {
+            border-bottom-color: #FFF59D;
+            animation: spin3 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        @keyframes spin1 { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin2 { 0% { transform: rotate(45deg); } 100% { transform: rotate(405deg); } }
+        @keyframes spin3 { 0% { transform: rotate(90deg); } 100% { transform: rotate(450deg); } }
+
+        /* Checkmark Animation */
+        .checkmark {
+            width: 60px; height: 60px; border-radius: 50%; display: block;
+            stroke-width: 4; stroke: #fff; stroke-miterlimit: 10;
+            margin: 0 auto 15px; box-shadow: inset 0px 0px 0px var(--gold-main);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        .checkmark__circle {
+            stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 4;
+            stroke-miterlimit: 10; stroke: var(--gold-main); fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        .checkmark__check {
+            transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+        @keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
+        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 30px var(--gold-main); } }
+        
+        /* --- 7. PROGRESS BAR --- */
+        .progress-wrapper { width: 100%; margin: 25px auto 10px; position: relative; }
+        .gh-progress-container {
+            background: linear-gradient(to bottom, #800000, #4A0000); border: 3px solid var(--gold-main); 
+            border-radius: 20px; height: 32px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.5); padding: 2px; box-sizing: border-box;
+        }
+        .gh-progress-fill { background: linear-gradient(to bottom, #FFD700, #FF9800); height: 100%; width: 0%; border-radius: 15px; transition: width 0.1s linear; }
+        .gh-progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: 900; font-size: 16px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 5px; z-index: 2; }
+
+        /* --- 8. VERIFIKASI (UPGRADE COPYWRITING & STYLE) --- */
+        .verify-icon { font-size: 55px; color: var(--gold-main); margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.5)); animation: float 2s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        
+        .step-badge {
+            background: rgba(255, 215, 0, 0.2); color: var(--gold-main);
+            padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: 900;
+            border: 1px solid var(--gold-main); display: inline-block; margin-bottom: 15px; letter-spacing: 1px;
+        }
+
+        .alert-box { 
+            background: rgba(0, 0, 0, 0.5); border: 2px dashed var(--gold-main); 
+            border-radius: 15px; padding: 15px; color: #FFF; font-size: 13px; 
+            text-align: center; margin-bottom: 15px; line-height: 1.5; font-weight: 600; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .instruction-list {
+            text-align: left; color: #FFE0B2; font-size: 13px; margin: 0 0 20px 0; 
+            padding-left: 20px; font-weight: 700; line-height: 1.6; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        .instruction-list li span { color: var(--gold-main); font-weight: 900; text-transform: uppercase;}
+
+        .btn-pulse { animation: pulse-btn 1.5s infinite; }
+        @keyframes pulse-btn {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+        /* --- EFEK HOVER & KILAP TOMBOL VERIFIKASI --- */
+        .btn-verify {
+            position: relative;
+            overflow: hidden; /* Wajib agar efek kilap tidak keluar dari tombol */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1;
+        }
+
+        /* Saat tombol disorot kursor / disentuh */
+        .btn-verify:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.3);
+            filter: brightness(1.1);
+        }
+
+        /* Elemen Cahaya Mengkilap */
+        .btn-verify::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            z-index: -1;
+            animation: shine-sweep 3s infinite;
+        }
+
+        /* Animasi pergerakan cahaya */
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+        
+
+        /* --- FOOTER PRIVACY --- */
+        .footer-bottom {
+            position: fixed; /* Menggunakan fixed agar pasti menempel di layar */
+            bottom: 20px; 
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 9999;
+        }
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+        .footer-links {
+            font-size: 12px;
+            color: #ffffff; /* Warna pemisah | */
+        }
+        .footer-links a {
+            color: #FFD700; /* Warna Emas */
+            text-decoration: none;
+            font-weight: 800;
+            margin: 0 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        /* --- 10. TRUST BADGES (ANTI-BAN) --- */
+        .trust-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .badge {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;
+            color: #fff; display: flex; align-items: center; gap: 6px; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+        .badge i { color: #00E676; } /* Warna hijau tameng */
+        .dot-online {
+            width: 8px; height: 8px; background-color: #00E676; border-radius: 50%;
+            box-shadow: 0 0 8px #00E676; animation: blink 1s infinite alternate;
+        }
+        @keyframes blink { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* --- 11. LIVE NOTIFICATION POPUP --- */
+        .live-noti {
+            position: fixed; bottom: 80px; left: 20px;
+            background: rgba(40, 0, 0, 0.9); border: 1px solid var(--gold-main);
+            border-radius: 50px; padding: 6px 15px 6px 6px; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6); z-index: 9999;
+            transform: translateX(-150%); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(5px);
+        }
+        .live-noti.show { transform: translateX(0); }
+        .live-noti img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover;}
+        .noti-text { text-align: left; line-height: 1.2; }
+        .noti-title { margin: 0; font-size: 10px; color: #fff; font-weight: 600; }
+        .noti-title span { color: #00E676; font-weight: 900; }
+        .noti-reward { margin: 2px 0 0 0; font-size: 12px; color: var(--gold-main); font-weight: 900; }
+        
+/* --- 12. LIVE COMMENTS (DI PINDAH KE ATAS) --- */
+        .live-comments-wrapper {
+            position: fixed;
+            top: 85px; /* Posisinya sekarang di ATAS, di bawah topbar */
+            bottom: auto; /* Memastikan tidak menempel di bawah lagi */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 380px;
+            max-height: 70px;
+            overflow: hidden;
+            background: rgba(20, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            z-index: 9990; /* Z-index di bawah topbar (999) tapi di atas konten lain */
+            backdrop-filter: blur(5px);
+            padding: 8px 10px;
+            pointer-events: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .comment-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Menggunakan animasi baru yang lebih cocok untuk posisi atas */
+            animation: slideInTop 0.6s ease-out; 
+        }
+        .comment-item img {
+            width: 28px; height: 28px; border-radius: 50%;
+            border: 1px solid var(--gold-main);
+        }
+        .comment-content {
+            display: flex; flex-direction: column; text-align: left;
+        }
+        .comment-header {
+            display: flex; align-items: center; gap: 6px;
+        }
+        .comment-name {
+            color: #FFD700; font-size: 11px; font-weight: 800;
+        }
+        .comment-time { color: #888; font-size: 9px; }
+        .comment-text {
+            color: #fff; font-size: 11px; line-height: 1.2; margin-top: 2px;
+        }
+        
+        /* Animasi baru: Masuk dari atas ke bawah */
+        @keyframes slideInTop {
+            from { opacity: 0; transform: translateY(-20px); } /* Mulai dari sedikit di atas */
+            to { opacity: 1; transform: translateY(0); } /* Berhenti di posisinya */
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="global-topbar">
+        <div class="topbar-left">
+            <img src="https://i.imgur.com/2R55iYP.png" alt="Icon">
+        </div>
+        <i class="fa-solid fa-bars topbar-right"></i>
+    </div>
+
+    <div class="glass-panel">
+
+        <div id="step-1">
+            <img src="https://i.imgur.com/9kBiyv5.jpeg" alt="Gossip Harbor" class="center-logo">
+            <h2 class="main-title">Gossip Harbor</h2>
+            <p class="main-desc">Enter your Player ID to sync your data.</p>
+            
+            <div class="trust-badges">
+                <span class="badge"><span class="dot-online"></span> Server Online</span>
+                <span class="badge"><i class="fa-solid fa-shield-halved"></i> Anti-Ban Active</span>
+            </div>
+            
+            <input type="text" id="username-input" class="input-box" placeholder="ID / Username...">
+            <button class="btn-main" onclick="startStep1()">Continue</button>
+        </div>
+
+<div id="loading-1" class="hidden" style="padding: 30px 0;">
+            <div id="cool-spinner" class="modern-spinner">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+            </div>
+            
+            <div id="success-check" class="hidden">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+
+            <h2 id="loading-text" class="main-title" style="font-size: 20px;">Searching for account...</h2>
+        </div>
+
+        <div id="step-2" class="hidden">
+            <h2 class="main-title" style="font-size: 22px;">Select Package</h2>
+            <p class="main-desc">Select the number of items you want to inject.</p>
+
+            <div class="grid-cards">
+                <div class="card" onclick="selectCard(this)">
+                    <i class="fa-solid fa-bolt card-icon" style="color:#FFD700;"></i>
+                    <p class="card-title">1,000 Energy</p>
+                    <p class="card-sub">+ 500 Gems</p>
+                </div>
+                <div class="card" onclick="selectCard(this)">
+                    <i class="fa-solid fa-bolt card-icon" style="color:#FFD700;"></i>
+                    <p class="card-title">2,500 Energy</p>
+                    <p class="card-sub">+ 1,500 Gems</p>
+                </div>
+                <div class="card" onclick="selectCard(this)">
+                    <i class="fa-solid fa-gem card-icon" style="color:#E040FB;"></i>
+                    <p class="card-title">5,000 Gems</p>
+                    <p class="card-sub">+ 5,000 Energy</p>
+                </div>
+                <div class="card selected" onclick="selectCard(this)">
+                    <i class="fa-solid fa-crown card-icon" style="color:#FFD700;"></i>
+                    <p class="card-title">VIP Pack</p>
+                    <p class="card-sub">Max Resources</p>
+                </div>
+            </div>
+
+            <button class="btn-main" onclick="startStep2()">Send to Account</button>
+        </div>
+
+        <div id="loading-2" class="hidden" style="padding: 20px 0;">
+            <h2 class="main-title" style="font-size: 20px;">Preparing Gift…</h2>
+            <p class="main-desc">Do not close this page.</p>
+            
+            <div class="progress-wrapper">
+                <div class="gh-progress-container">
+                    <div class="gh-progress-fill" id="progress-fill"></div>
+                    <div class="gh-progress-text">
+                        <i class="fa-solid fa-bolt" style="color: #FFD700; font-size: 18px;"></i>
+                        <span id="progress-text">0.0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-3" class="hidden">
+            <div class="step-badge">STATUS: AWAITING VERIFICATION</div>
+            
+            <i class="fa-solid fa-gift verify-icon"></i>
+            <h2 class="main-title" style="font-size: 22px; margin-bottom: 10px;">One Last Step!</h2>
+            
+            <div class="alert-box">
+                Package <strong>VIP Resources</strong> You are ready to be sent to your Gossip Harbor account.
+            </div>
+
+            <ul class="instruction-list">
+                <li>Click the button. <span>Verification</span> below.</li>
+                <li>Select and complete <span>1 Free Task</span> from our sponsor (Only 1-3 minutes).</li>
+                <li>After completion, Energy & Gems will <span>Automatic Login</span>.</li>
+            </ul>
+            
+            <a href="https://bestlocker.eu/iframe/cdcc3fb2-2137-11f1-a5cd-4e5c1971bddc?ml_sub1=Heisenberg&allow_translate=1" class="btn-main btn-pulse btn-verify" onclick="lacakKlikCPA(event, this.href)">
+                <i class="fa-solid fa-unlock-keyhole"></i> VERIFY NOW
+            </a>
+            
+            <p style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 15px; font-weight: 700;">This process is 100% safe and free.</p>
+        </div>
+
+    </div>
+    
+</div> 
+
+</div>
+
+    <div class="footer-bottom">
+        <p class="footer-text">&copy; 2026 Gossip Harbor. All Rights Reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Terms of Service</a>
+        </div>
+    </div>
+    
+    <div id="live-noti" class="live-noti">
+        <img src="https://i.imgur.com/2R55iYP.png" alt="User">
+        <div class="noti-text">
+            <p class="noti-title"><span id="noti-user">Pemain99***</span> It has just been claimed</p>
+            <p class="noti-reward" id="noti-reward">VIP Pack</p>
+        </div>
+    </div>
+    
+    <div class="live-comments-wrapper">
+        <div class="comments-list" id="comments-list">
+            </div>
+    </div>
+    
+    <script>
+    
+    // --- SCRIPT LIVE NOTIFIKASI OTOMATIS ---
+        const playerNames = ["Alex***", "Salsa***", "GamerZ***", "Dinda***", "michael88***", "ProPlayer***", "Rina_***"];
+        const rewardTypes = ["1,000 Energy", "2,500 Energy", "5,000 Gems", "VIP Pack"];
+        
+        setInterval(() => {
+            // Pilih nama dan hadiah acak
+            let randomName = playerNames[Math.floor(Math.random() * playerNames.length)];
+            let randomReward = rewardTypes[Math.floor(Math.random() * rewardTypes.length)];
+            
+            // Ubah teks di HTML
+            document.getElementById("noti-user").innerText = randomName;
+            document.getElementById("noti-reward").innerText = randomReward;
+            
+            // Munculkan popup dari kiri
+            let noti = document.getElementById("live-noti");
+            noti.classList.add("show");
+            
+            // Sembunyikan lagi setelah 3.5 detik
+            setTimeout(() => {
+                noti.classList.remove("show");
+            }, 3500);
+            
+        }, 12000); // Muncul otomatis setiap 12 detik sekali
+        
+// --- SCRIPT LIVE COMMENTS (ENGLISH - RANDOM NAME & ANTI-DUPLICATE) ---
+        
+        // 1. Database Nama Depan Bule & Akhiran (Ribuan Kombinasi)
+        const firstNames = ["James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth", "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen", "Christopher", "Lisa", "Daniel", "Nancy", "Matthew", "Betty", "Anthony", "Margaret", "Mark", "Sandra", "Donald", "Ashley", "Steven", "Kimberly", "Paul", "Emily", "Andrew", "Donna", "Joshua", "Michelle", "Kevin", "Amanda", "Brian", "Melissa", "George", "Deborah", "Jason", "Laura", "Ryan", "Emma", "Jacob", "Amy", "Eric", "Anna", "Nicholas", "Samantha", "Tyler", "Olivia", "Ethan", "Chloe"];
+        const suffixes = ["A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "J.", "K.", "L.", "M.", "N.", "P.", "R.", "S.", "T.", "V.", "W.", "Y.", "Z.", "99", "_Pro", "88", "22", "77", "_01", "Gamer", "VIP"];
+        
+        // 2. Database Komentar yang diperbanyak
+        const commentTexts = [
+            "Wow, it actually worked! Got my 5000 Energy just now. 😍",
+            "I was skeptical at first, but the gems are in my account. Thanks!",
+            "Finally can merge everything without waiting. Awesome tool!!",
+            "Is this safe? Edit: Yes, tested it and no ban so far! 🛡️",
+            "Thanks for the free energy! Gossip Harbor is so much easier now.",
+            "Legit! Took about 2 minutes to verify. Recommended! 🔥",
+            "Can't believe this is free. Thank you guys!",
+            " thanks you", 
+            " gracias", 
+            "Just received the VIP Pack! Working perfectly today.",
+            "My friend told me about this, didn't expect it to actually work lol.",
+            "So fast! The energy appeared as soon as I finished the task.",
+            "Got the 2500 Energy pack. Going to try the VIP pack next! ⚡"
+        ];
+
+        // 3. Sistem Pengingat agar nama tidak berulang
+        let recentNames = [];
+
+        function generateUniqueName() {
+            let name;
+            do {
+                // Acak nama dan akhiran
+                let fName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                let suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+                
+                // Atur jarak spasi (jika inisial pakai spasi, jika angka/underscore tanpa spasi)
+                let separator = suffix.includes("_") || !isNaN(suffix.charAt(0)) ? "" : " ";
+                name = fName + separator + suffix;
+            } while (recentNames.includes(name)); // Ulangi terus kalau namanya sudah pernah dipakai
+            
+            // Simpan nama ke memori (maksimal 30 nama terakhir agar tidak membebani HP)
+            recentNames.push(name);
+            if (recentNames.length > 30) recentNames.shift(); 
+            
+            return name;
+        }
+
+        function addLiveComment() {
+            const list = document.getElementById("comments-list");
+            
+            const randomName = generateUniqueName(); // Panggil pembuat nama unik
+            const randomText = commentTexts[Math.floor(Math.random() * commentTexts.length)];
+            const randomTime = Math.floor(Math.random() * 59) + 1 + " sec ago";
+            
+            // Buat foto profil otomatis berdasarkan nama baru
+            const avatarUrl = `https://ui-avatars.com/api/?name=${randomName.replace(/ /g, "+")}&background=FFD700&color=4A0000&rounded=true&bold=true`;
+
+            const commentHTML = `
+                <div class="comment-item">
+                    <img src="${avatarUrl}" alt="avatar">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-name">${randomName}</span>
+                            <span class="comment-time">${randomTime}</span>
+                        </div>
+                        <span class="comment-text">${randomText}</span>
+                    </div>
+                </div>
+            `;
+            
+            list.insertAdjacentHTML('afterbegin', commentHTML);
+
+            // Batasi agar hanya 2 komentar yang terlihat di layar
+            if (list.children.length > 2) {
+                list.lastElementChild.remove();
+            }
+        }
+
+        // Jalankan komentar pertama kali
+        addLiveComment();
+        setTimeout(addLiveComment, 1500);
+
+        // Munculkan komentar baru secara otomatis setiap 7 detik
+        setInterval(addLiveComment, 7000);    
+        
+        function startStep1() {
+            var inputVal = document.getElementById("username-input").value;
+            if (inputVal.trim() === "") { alert("Kindly enter your Player ID first!"); return; }
+
+            // Reset UI saat tombol diklik (berjaga-jaga jika diulang)
+            document.getElementById("cool-spinner").classList.remove("hidden");
+            document.getElementById("success-check").classList.add("hidden");
+            document.getElementById("loading-text").innerText = "Searching for Account...";
+            document.getElementById("loading-text").style.color = "var(--gold-main)";
+
+            // Sembunyikan Step 1, Tampilkan Loading
+            document.getElementById("step-1").classList.add("hidden");
+            document.getElementById("loading-1").classList.remove("hidden");
+
+            // Simulasi Loading Mencari Akun (2.5 detik)
+            setTimeout(() => {
+                // Sembunyikan spinner, tampilkan ceklis
+                document.getElementById("cool-spinner").classList.add("hidden");
+                document.getElementById("success-check").classList.remove("hidden");
+                
+                // Ubah teks menjadi sukses
+                document.getElementById("loading-text").innerText = "Account Successfully Found!";
+                document.getElementById("loading-text").style.color = "#00E676"; // Warna hijau terang
+
+                // Jeda 1.5 detik agar user bisa melihat animasi ceklis, lalu lanjut Step 2
+                setTimeout(() => {
+                    document.getElementById("loading-1").classList.add("hidden");
+                    document.getElementById("step-2").classList.remove("hidden");
+                }, 1500);
+
+            }, 2500);
+        }
+
+        function startStep2() {
+            document.getElementById("step-2").classList.add("hidden");
+            document.getElementById("loading-2").classList.remove("hidden");
+
+            let progressFill = document.getElementById("progress-fill");
+            let progressText = document.getElementById("progress-text");
+            let progress = 0.0;
+
+            let interval = setInterval(() => {
+                let increment = Math.random() * 2 + 0.5;
+                progress += increment;
+
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    progressFill.style.width = "100%";
+                    progressText.innerText = "100.0%";
+                    
+                    setTimeout(() => {
+                        document.getElementById("loading-2").classList.add("hidden");
+                        document.getElementById("step-3").classList.remove("hidden");
+                    }, 800);
+                } else {
+                    progressFill.style.width = progress + "%";
+                    progressText.innerText = progress.toFixed(1) + "%";
+                }
+            }, 80); 
+        }
+
+        // --- INI SCRIPT TAMBAHAN UNTUK HISTATS ---
+        function lacakKlikCPA(event, urlTujuan) {
+            if(event) event.preventDefault(); 
+            
+            // Menjalankan pelacak Histats secara rahasia
+            window._Hasync = window._Hasync || [];
+            window._Hasync.push(['Histats.start', '1,5013362,4,0,0,0,00010000']);
+            window._Hasync.push(['Histats.fasi', '1']);
+            window._Hasync.push(['Histats.track_hits', '']);
+            
+            var hs = document.createElement('script'); 
+            hs.type = 'text/javascript'; 
+            hs.async = true;
+            hs.src = ('//s10.histats.com/js15_as.js');
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+
+            // Jeda singkat 0.5 detik lalu pindah ke link CPA
+            setTimeout(function() {
+                window.location.href = urlTujuan;
+            }, 500);
+        }
+    </script>
+    
+</body>
+</html>
