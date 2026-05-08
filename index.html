@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gossip Harbor Reward</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="top-bar">
+        <div class="server-status">
+            <div><span class="status-dot"></span><span class="online-text">SERVER ONLINE</span></div>
+            <span class="user-count" id="userCount">Active Chefs: 4,192</span>
+        </div>
+        <div class="game-logo-small">
+            <i class="fas fa-coffee" style="color: #fff; font-size: 1.5rem;"></i>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div id="step1" class="step-content active">
+            <div class="logo-container">
+                <img src="logo-gossip.png" alt="Gossip Harbor" class="main-logo">
+            </div>
+            <h2 class="title-text">ACCOUNT SEARCH</h2>
+            <p class="subtitle">Enter your Game ID to sync with servers.</p>
+            <div class="input-group">
+                <i class="fas fa-id-badge input-icon"></i>
+                <input type="text" id="usernameInput" placeholder="Game ID / Username">
+            </div>
+            <div class="device-selector">
+                <div class="device-btn selected" onclick="selectDevice(this)">
+                    <i class="fab fa-android"></i> Android
+                </div>
+                <div class="device-btn" onclick="selectDevice(this)">
+                    <i class="fab fa-apple"></i> iOS
+                </div>
+            </div>
+            <button class="cta-btn pulse-anim" onclick="processStep1()">CONNECT ACCOUNT</button>
+            
+            <div class="loading-container" id="loading1" style="display:none; margin-top:20px;">
+                <div class="search-anim" id="searchIcon"><i class="fas fa-spinner fa-spin"></i></div>
+                <div class="success-icon" id="successIcon" style="display: none;"><i class="fas fa-check-circle"></i></div>
+                <div class="loading-text" id="loadingText1">Searching database...</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar1"></div></div>
+            </div>
+            
+            <div class="comments-section">
+                <div class="comments-header"><i class="fas fa-comments"></i> Community Feed</div>
+                <div class="comment-list" id="dynamicComments"></div>
+            </div>
+        </div>
+
+        <div id="step2" class="step-content" style="display: none;">
+            <div class="user-badge"><i class="fas fa-user-circle"></i> Chef: <span id="displayUsername" style="color: #FFD700;">User</span></div>
+            <h2 class="title-text">SELECT PACKAGE</h2>
+            <div class="reward-tabs">
+                <div class="tab active" onclick="switchTab('energy')">ENERGY</div>
+                <div class="tab" onclick="switchTab('coins')">COINS</div>
+            </div>
+
+            <div id="tab-energy" class="reward-grid">
+                <div class="reward-card">
+                    <div class="reward-amount">3,000</div>
+                    <div class="reward-name">ENERGY</div>
+                    <i class="fas fa-bolt reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn" onclick="startClaimProcess('3,000 Energy')">CLAIM</button>
+                </div>
+                <div class="reward-card">
+                    <div class="reward-amount">5,000</div>
+                    <div class="reward-name">ENERGY</div>
+                    <i class="fas fa-bolt reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn" onclick="startClaimProcess('5,000 Energy')">CLAIM</button>
+                </div>
+                <div class="reward-card popular">
+                    <div class="badge-best">MOST POPULAR</div>
+                    <div class="reward-amount" style="color: #FFD700;">15,000</div>
+                    <div class="reward-name">ENERGY</div>
+                    <i class="fas fa-bolt reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn pulse-anim" onclick="startClaimProcess('15,000 Energy')">CLAIM</button>
+                </div>
+                <div class="reward-card">
+                    <div class="badge-best" style="background: #d32f2f;">JACKPOT</div>
+                    <div class="reward-amount">30,000</div>
+                    <div class="reward-name">ENERGY</div>
+                    <i class="fas fa-bolt reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn" onclick="startClaimProcess('30,000 Energy')">CLAIM</button>
+                </div>
+            </div>
+
+            <div id="tab-coins" class="reward-grid" style="display: none;">
+                <div class="reward-card">
+                    <div class="reward-amount">10K</div>
+                    <div class="reward-name">COINS</div>
+                    <i class="fas fa-coins reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn" onclick="startClaimProcess('10,000 Coins')">CLAIM</button>
+                </div>
+                <div class="reward-card popular">
+                    <div class="badge-best">TOP CHOICE</div>
+                    <div class="reward-amount" style="color: #FFD700;">50K</div>
+                    <div class="reward-name">COINS</div>
+                    <i class="fas fa-coins reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn" onclick="startClaimProcess('50,000 Coins')">CLAIM</button>
+                </div>
+                <div class="reward-card">
+                    <div class="reward-amount">100K</div>
+                    <div class="reward-name">COINS</div>
+                    <i class="fas fa-coins reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn" onclick="startClaimProcess('100,000 Coins')">CLAIM</button>
+                </div>
+                <div class="reward-card">
+                    <div class="reward-amount">500K</div>
+                    <div class="reward-name">COINS</div>
+                    <i class="fas fa-coins reward-icon" style="color: #FFD700;"></i>
+                    <button class="claim-btn" onclick="startClaimProcess('500,000 Coins')">CLAIM</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-loading" class="step-content" style="display: none;">
+            <i id="loadingSpinner" class="fas fa-sync fa-spin" style="font-size: 4rem; color: #c2185b; margin-bottom: 15px;"></i>
+            <i id="successIconGen" class="fas fa-check-circle" style="font-size: 4rem; color: #28a745; margin-bottom: 15px; display: none;"></i>
+            <h2 id="loadingTitle" class="title-text" style="font-size: 1.5rem;">SYNCING...</h2>
+            <div class="console-text" id="consoleText">Preparing your order...</div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarGen"></div></div>
+        </div>
+
+        <div id="step3" class="step-content" style="display: none;">
+            <div class="alert-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2 class="title-text" style="color: #c2185b;">ANTI-BOT CHECK</h2>
+            <p style="font-weight: 800; color: #444; margin-bottom: 20px; line-height: 1.5;">
+                <span id="displayUsername2" style="color: #c2185b; text-transform: uppercase;">User</span>, your <span id="selectedItemName" style="color: #d32f2f;">Reward</span> is ready to be sent!<br><br>
+                To prevent automated abuse, please <strong>complete one offer below to the end</strong> to verify your session and receive your items instantly.
+            </p>
+            
+            <a id="lockerLink" href="#" class="cta-btn pulse-anim" style="background: #28a745; border-bottom: 5px solid #1e7e34; box-shadow: 0 5px 0 #1e7e34;" onclick="lacakKlikCPA(event, this.href)">
+                VERIFY NOW
+            </a>
+        </div>
+
+        <footer class="pro-footer">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a> | 
+                <a href="#">Terms of Service</a> | 
+                <a href="#">Contact Us</a>
+            </div>
+            <p class="footer-copyright">
+                © 2026 gossip harbor. All rights reserved.
+            </p>
+        </footer>
+
+    </div>
+
+    <div id="live-notification" class="live-noti-container">
+        <div class="noti-img"><i class="fas fa-gift"></i></div>
+        <div class="noti-content">
+            <div class="noti-text"><span id="noti-name" class="noti-name">Player</span> claimed <span id="noti-item" class="noti-item">5,000 Energy</span></div>
+        </div>
+    </div>
+
+    <script src="script.js?v=1"></script>
+</body>
+</html>
